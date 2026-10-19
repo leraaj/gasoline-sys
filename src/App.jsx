@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import LiquidationHistory from "./pages/LiquidationHistory";
 import LiquidationRecord from "./pages/LiquidationRecord";
 import Test from "./pages/Test";
@@ -18,6 +18,7 @@ function App() {
       <Route
         path="*"
         element={<Navigate to="/liquidation-history" replace />}
+        // NEW
       />
     </Routes>
   );
