@@ -14,7 +14,11 @@ function App() {
       {/* Lists all the records of Gas liquidations */}
       <Route element={<LiquidationHistory />} path="/liquidation-history" />
       <Route element={<LiquidationRecord />} path="/liquidation-record/:id" />
-      <Route element={<Test />} path="/" />
+      {/* <Route element={<Test />} path="/" /> */}
+      <Route
+        path="*"
+        element={<Navigate to="/liquidation-history" replace />}
+      />
     </Routes>
   );
 }
