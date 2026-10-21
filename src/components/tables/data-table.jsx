@@ -190,15 +190,26 @@ export function DataTable({
           </TableHeader>
 
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={table.getVisibleLeafColumns().length}
-                  className="h-24 text-center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows.length ? (
+            {loading ? table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className={
+                    String(row.original.id ?? row.original._id) ===
+                    String(editingRowId)
+                      ? "bg-blue-50 hover:bg-blue-50"
+                      : ""
+                  }
+                  data-state={row.getIsSelected() ? "selected" : undefined}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={`text-center`}>
+                     <Skeleton className="w-px whitespace-nowrap text-center " /> 
+                    </TableCell>
+                  ))}
+                </TableRow>
+              )) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
