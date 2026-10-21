@@ -39,6 +39,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
+import { Skeleton } from "../ui/skeleton";
 
 export function DataTable({
   columns,
@@ -191,14 +192,15 @@ export function DataTable({
 
           <TableBody>
             {loading ? (
-              table.getRowModel().rows.length &&
-              table.getRowModel().rows.map((row) => (
-                <TableRow>
-                  {row.forEach((element) => (
-                    <Skeleton className="w-px whitespace-nowrap text-center rounded-full" />
-                  ))}
-                </TableRow>
-              ))
+              <TableRow>
+                {Array.from({
+                  length: table.getVisibleLeafColumns().length,
+                }).map((_, index) => (
+                  <TableCell key={index}>
+                    <Skeleton className="h-4 w-full rounded-md" />
+                  </TableCell>
+                ))}
+              </TableRow>
             ) : table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

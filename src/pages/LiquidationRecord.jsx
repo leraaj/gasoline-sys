@@ -43,7 +43,7 @@ const LiquidationRecord = () => {
       },
     });
   };
-  const [startingGas, setStartingGas] = useState("0");
+  const [startingGas, setStartingGas] = useState(null);
   const [activeRowId, setActiveRowId] = useState(null);
   const [editingRowId, setEditingRowId] = useState(null);
   const [editingSnapshot, setEditingSnapshot] = useState(null);
@@ -238,6 +238,10 @@ const LiquidationRecord = () => {
   const handleStartingGasChange = (value) => {
     setStartingGas(value);
 
+    if (value === "") {
+      return;
+    }
+
     setData((currentData) => calculateLiquidations(currentData, value));
   };
 
@@ -277,12 +281,21 @@ const LiquidationRecord = () => {
 
         if (cancelled) return;
 
-        const value = Number(history.startingGas ?? 0);
+        const value = history.startingGas;
 
-        setStartingGas(String(value));
-        savedStartingGasRef.current = value;
+        if (value === null || value === undefined || value === "") {
+          setStartingGas(null);
+          savedStartingGasRef.current = null;
+        } else {
+          setStartingGas(String(value));
+          savedStartingGasRef.current = Number(value);
+        }
       } catch (error) {
         console.error("Failed to load liquidation history:", error);
+
+        if (!cancelled) {
+          setStartingGas(null);
+        }
       } finally {
         if (!cancelled) {
           setHistoryLoaded(true);
@@ -294,14 +307,21 @@ const LiquidationRecord = () => {
       setHistoryLoaded(true);
       return;
     }
+
     setHistoryLoaded(false);
+    setStartingGas(null);
     fetchHistory();
+
     return () => {
       cancelled = true;
     };
   }, [id]);
 
   useEffect(() => {
+    if (startingGas === null || startingGas === "") {
+      return;
+    }
+
     setData((currentData) => {
       const calculated = calculateLiquidations(currentData, startingGas);
 
@@ -320,7 +340,21 @@ const LiquidationRecord = () => {
 
       return unchanged ? currentData : calculated;
     });
-  }, [data, startingGas, setData]);
+  }, [startingGas, setData]);
+  const handleInitializeStartingGas = async () => {
+    if (startingGas === null || startingGas === "") {
+      return;
+    }
+
+    try {
+      await saveStartingGas(startingGas);
+
+      // Starting gas is now initialized.
+      savedStartingGasRef.current = Number(startingGas);
+    } catch (error) {
+      console.error("Failed to initialize starting gas:", error);
+    }
+  };
   const date = `${new Date(
     `${String(liquidationHistory?.startDate).slice(0, 10)}T00:00:00`,
   ).toLocaleDateString("en-US", {
@@ -356,7 +390,7 @@ const LiquidationRecord = () => {
         <DataTable
           data={data}
           columns={columns}
-          loading={loading}
+          loading={startingGas === null || loading}
           error={error}
           addRowBtn={() => (
             <Button
@@ -386,14 +420,16 @@ const LiquidationRecord = () => {
                   type="number"
                   min="0"
                   step="0.01"
-                  value={startingGas || liquidationHistory?.startingGas}
+                  value={startingGas ?? ""}
                   onChange={(event) =>
                     handleStartingGasChange(event.target.value)
                   }
                   onBlur={() => {
-                    saveStartingGas(startingGas).catch((error) => {
-                      console.error("Failed to save starting gas:", error);
-                    });
+                    if (startingGas !== null && startingGas !== "") {
+                      saveStartingGas(startingGas).catch((error) => {
+                        console.error("Failed to save starting gas:", error);
+                      });
+                    }
                   }}
                   className="h-9 w-36"
                   disabled={saving || !historyLoaded}
