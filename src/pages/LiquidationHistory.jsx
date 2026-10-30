@@ -88,7 +88,15 @@ const LiquidationHistory = () => {
         header: "Total Added",
         cell: ({ row }) => {
           const totalAdded = row.original?.totalAdded;
-          return totalAdded.toFixed(2) || "-";
+          return `${totalAdded?.toFixed(2)}` || "-";
+        },
+      },
+      {
+        accessorKey: "totalTrips",
+        header: "Total Trips",
+        cell: ({ row }) => {
+          const totalTrips = row.original?.totalTrips;
+          return `${totalTrips?.toFixed(2)}` || "-";
         },
       },
       {
@@ -96,7 +104,7 @@ const LiquidationHistory = () => {
         header: "Total Price",
         cell: ({ row }) => {
           const totalPrice = row.original?.totalPrice;
-          return totalPrice;
+          return `₱ ${Number(totalPrice).toLocaleString("en-US")}`;
         },
       },
       {

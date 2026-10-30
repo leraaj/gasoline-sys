@@ -36,7 +36,7 @@ const LiquidationRecord = () => {
     liquidationHistory: "",
   });
 
-  const handleNavigate = () => {
+  const handleNavigatePrintView = () => {
     navigate("/", {
       state: {
         printData: printData,
@@ -407,7 +407,9 @@ const LiquidationRecord = () => {
               {saving ? "Saving..." : "Add Row"}
             </Button>
           )}
-          filters={() => <Button onClick={handleNavigate}>Print View</Button>}
+          filters={() => (
+            <Button onClick={handleNavigatePrintView}>Print View</Button>
+          )}
           addButton={() => (
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
