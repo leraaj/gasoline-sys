@@ -439,6 +439,9 @@ const LiquidationRecord = () => {
               </div>
             </div>
           )}
+          totalTrip={liquidationHistory?.totalTrips}
+          totalPrice={liquidationHistory?.totalPrice}
+          totalTrips={liquidationHistory?.totalTrips}
         />
       </ContentContainer>
     </>

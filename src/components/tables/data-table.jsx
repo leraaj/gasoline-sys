@@ -51,6 +51,10 @@ export function DataTable({
   addRowBtn,
   noColumnFilter,
   noSearchFilter,
+  totalTrip,
+  totalPrice,
+  total,
+  totalTrips,
 }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -239,6 +243,19 @@ export function DataTable({
             )}
             {addRowBtn && (
               <TableRow>
+                <TableCell colSpan="4" className={" font-bold  "}>
+                  TOTAL:
+                </TableCell>
+                <TableCell className={"text-start"}>
+                  {totalTrip || "------"}
+                </TableCell>
+                <TableCell className={"text-start"}>
+                  {`₱ ${totalPrice}` || "------"}
+                </TableCell>
+                <TableCell />
+                <TableCell className={"text-start"}>
+                  {totalTrips || "------"}
+                </TableCell>
                 <TableCell
                   className="text-end"
                   colSpan={table.getVisibleLeafColumns().length}>
